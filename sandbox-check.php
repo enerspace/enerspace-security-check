@@ -269,8 +269,11 @@ if ($webspace === '') {
             ? 'Unsere Sandbox beschränkt den Zugriff auf den Ordner dieser Webseite: ' . $site . '. '
             : 'Der Zugriff ist auf den Ordner dieser Webseite beschränkt: ' . $site . '. ')
         . 'Im übergeordneten Webspace-Verzeichnis ' . $webspace . ' ist nur dieser Ordner sichtbar und lesbar. Andere Webseiten Ihres Vertrags sind nicht erreichbar.';
-    [$st, $tx] = judge($othersPhp, $othersCmd, 'warn', $vertragSafe,
-        'Im Webspace-Verzeichnis (' . $webspace . ') sind neben dieser Webseite auch Ihre anderen Webseiten sichtbar und deren Dateien lesbar. open_basedir auf {WEBSPACEROOT} trennt die Webseiten eines Vertrags nicht.');
+    $vertragOpen = 'Im Webspace-Verzeichnis (' . $webspace . ') sind neben dieser Webseite auch Ihre anderen Webseiten sichtbar und deren Dateien lesbar. '
+        . ($hasOpenBasedir
+            ? 'open_basedir gibt den gesamten Webspace frei und trennt die Webseiten eines Vertrags deshalb nicht voneinander.'
+            : 'Derzeit beschränkt kein Schutz den Zugriff auf den Ordner dieser Webseite, deshalb sind die Webseiten eines Vertrags nicht voneinander getrennt.');
+    [$st, $tx] = judge($othersPhp, $othersCmd, 'warn', $vertragSafe, $vertragOpen);
     check($g, $st, 'Andere Webseiten in Ihrem Vertrag erreichbar', $tx, 'no', 'yes', $othersPhp ? 'Nicht getrennt' : '');
 }
 
