@@ -30,6 +30,24 @@ umgehen können, und gibt eine Empfehlung zum Abschalten.
 2. Die Datei im Browser aufrufen, zum Beispiel `https://ihre-domain.de/sandbox-check.php`.
 3. Nach dem Test die Datei wieder löschen.
 
+Direkt ins aktuelle Verzeichnis laden (auf dem Server im Webroot ausführen):
+
+```bash
+curl -O https://raw.githubusercontent.com/enerspace/enerspace-security-check/main/sandbox-check.php
+```
+
+Oder mit wget:
+
+```bash
+wget https://raw.githubusercontent.com/enerspace/enerspace-security-check/main/sandbox-check.php
+```
+
+Nach dem Test wieder entfernen:
+
+```bash
+rm sandbox-check.php
+```
+
 Die Datei liest nur die eigene Umgebung aus. Sie zeigt keine Inhalte fremder
 Dateien und keine Namen anderer Kunden an. Aus Sicherheitsgründen ist sie nur
 eine Stunde nach dem Hochladen aktiv (`MAX_AGE`), danach liefert sie einen
