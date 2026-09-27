@@ -288,7 +288,7 @@ $g = 'Geschwindigkeit';
 
 check($g, $realpathCache > 0 ? 'ok' : 'warn', 'Zwischenspeicher für Dateipfade (realpath-Cache) aktiv',
     $realpathCache > 0
-        ? 'Ja. Der realpath-Cache ist aktiv (realpath_cache_get() liefert ' . (int) $realpathCache . ' Einträge). PHP muss aufgelöste Dateipfade nicht bei jedem Aufruf neu ermitteln, dadurch laden große Shops mit weniger Wartezeit.'
+        ? 'Ja. Der Zwischenspeicher für Dateipfade (realpath_cache) ist aktiv. PHP muss bereits aufgelöste Pfade nicht bei jedem Aufruf neu ermitteln. Dadurch laden besonders große Shops schneller.'
         : 'Nein. open_basedir deaktiviert den Zwischenspeicher für Dateipfade (realpath_cache). PHP muss die Pfade deshalb bei jedem Aufruf neu ermitteln. Das kann besonders große Shops verlangsamen. Mit unserer Sandbox bleibt der Zwischenspeicher aktiv, da sie ohne open_basedir auskommt.',
     'no', 'yes');
 
