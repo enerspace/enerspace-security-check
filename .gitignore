@@ -1,0 +1,14 @@
+# Editor / OS
+.idea/
+.vscode/
+*.sublime-*
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# PHP
+/vendor/
+*.log
+
+# Lokale Test-Uploads / Ablauf-Kopien
+sandbox-check-*.php

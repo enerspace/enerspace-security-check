@@ -1,0 +1,5 @@
+# Zeilenenden im Repo einheitlich als LF halten (Ziel ist ein Linux-Server).
+* text=auto eol=lf
+
+*.php text eol=lf
+*.md   text eol=lf
