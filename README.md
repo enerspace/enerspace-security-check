@@ -30,22 +30,28 @@ umgehen können, und gibt eine Empfehlung zum Abschalten.
 2. Die Datei im Browser aufrufen, zum Beispiel `https://ihre-domain.de/sandbox-check.php`.
 3. Nach dem Test die Datei wieder löschen.
 
-Direkt ins aktuelle Verzeichnis laden (auf dem Server im Webroot ausführen):
+### Herunterladen mit zufälligem Namen (empfohlen)
+
+Damit die Prüfdatei nicht unter einer leicht zu erratenden Adresse liegt, wird
+beim Download eine Zufallszahl an den Namen gehängt. Auf dem Server im Webroot
+ausführen (bei Shopware im Ordner `public`):
+
+```bash
+f="sandbox-check-$(od -An -tu8 -N8 /dev/urandom | tr -d ' ').php"; curl -fsSo "$f" https://raw.githubusercontent.com/enerspace/enerspace-security-check/main/sandbox-check.php && echo "Im Browser aufrufen: $f"
+```
+
+Der Befehl legt zum Beispiel `sandbox-check-18229314239742112832.php` an und gibt
+den Namen aus. Diese Datei dann im Browser aufrufen und nach dem Test wieder
+entfernen:
+
+```bash
+rm sandbox-check-*.php
+```
+
+### Einfacher Download (fester Name)
 
 ```bash
 curl -O https://raw.githubusercontent.com/enerspace/enerspace-security-check/main/sandbox-check.php
-```
-
-Oder mit wget:
-
-```bash
-wget https://raw.githubusercontent.com/enerspace/enerspace-security-check/main/sandbox-check.php
-```
-
-Nach dem Test wieder entfernen:
-
-```bash
-rm sandbox-check.php
 ```
 
 Die Datei liest nur die eigene Umgebung aus. Sie zeigt keine Inhalte fremder
