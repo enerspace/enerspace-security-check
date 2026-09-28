@@ -145,6 +145,15 @@ $site = basename($docroot) === 'public' ? dirname($docroot) : $docroot;
 $webspace = preg_match('#^' . VHOSTS . '/([^/]+)/#', $site . '/', $m) ? VHOSTS . '/' . $m[1] : '';
 $webspaceName = $m[1] ?? '';
 $domain = $_SERVER['SERVER_NAME'] ?? ($_SERVER['HTTP_HOST'] ?? '');
+// Eigener Konfigurationsordner unter /var/www/vhosts/system. Der aufgerufene
+// Name passt nicht immer: www.enerspace.de liegt unter system/enerspace.de, ein
+// Domain-Alias unter dem Namen der Hauptdomain. Plesk schreibt das PHP-Fehlerlog
+// jeder Domain in ihren eigenen Ordner (system/<domain>/logs), das ist verlässlich.
+$ownSystem = array_values(array_unique(array_filter([
+    preg_match('#^' . VHOSTS . '/system/([^/]+)/#', (string) ini_get('error_log'), $m2) ? $m2[1] : '',
+    strtolower($domain),
+    preg_replace('/^www\./i', '', strtolower($domain)),
+])));
 $openBasedir = (string) ini_get('open_basedir');
 $hasOpenBasedir = $openBasedir !== '';
 
@@ -222,8 +231,8 @@ check($g, $st, 'Daten anderer Kunden lesbar', $tx, 'half', 'yes');
 
 $sysPhp = entries(VHOSTS . '/system');
 $sysCmd = cmd_entries(VHOSTS . '/system');
-[$st, $tx] = judge(is_array($sysPhp) && count(array_diff($sysPhp, [$domain])) > 0,
-    $sysCmd === null ? null : count(array_diff($sysCmd, [$domain])) > 0, 'warn',
+[$st, $tx] = judge(is_array($sysPhp) && count(array_diff($sysPhp, $ownSystem)) > 0,
+    $sysCmd === null ? null : count(array_diff($sysCmd, $ownSystem)) > 0, 'warn',
     'Unter /var/www/vhosts/system sind die Konfigurationsordner anderer Domains nicht sichtbar.',
     'Unter /var/www/vhosts/system sind die Namen und Konfigurationsordner (httpd.conf, php.ini) anderer Domains sichtbar.');
 check($g, $st, 'Konfiguration anderer Domains einsehbar', $tx, 'half', 'yes');
@@ -487,8 +496,8 @@ $icon = fn($st) => $st === 'ok' ? '✓' : ($st === 'info' ? 'i' : '!');
 # Kennzahlen für die vier Kacheln
 ############################################
 
-$dphp = is_array($sysPhp) ? count(array_diff($sysPhp, [$domain])) : 0;
-$dcmd = is_array($sysCmd) ? count(array_diff($sysCmd, [$domain])) : 0;
+$dphp = is_array($sysPhp) ? count(array_diff($sysPhp, $ownSystem)) : 0;
+$dcmd = is_array($sysCmd) ? count(array_diff($sysCmd, $ownSystem)) : 0;
 
 $cntKunden  = max(count($foreignPhp), is_array($foreignCmd) ? count($foreignCmd) : 0);
 $cntDomains = max($dphp, $dcmd);
